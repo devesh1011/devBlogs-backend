@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const nodemailer = require('nodemailer');
 
 // Load environment variables from .env file
-dotenv.config({ path: path.join(__dirname, '../client/.env') });
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 // Import routes
 const authRoutes = require('./routes/auth.routes');
