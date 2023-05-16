@@ -81,38 +81,6 @@ exports.getUserDetails = async (req, res) => {
     }
 };
 
-exports.updateProfilePicture = async (req, res) => {
-    const filePath = req.file.path;
-
-    try {
-        await updateProfilePictureInDatabase(req.userId, filePath);
-
-        res.status(200).json({ message: 'Profile picture updated successfully', filePath });
-    } catch (error) {
-        console.error('Error in updateProfilePicture:', error);
-        res.status(500).json({ message: 'Error updating profile picture', error: error.message });
-    }
-};
-
-const updateProfilePictureInDatabase = async (userId, filePath) => {
-    try {
-        const user = await User.findByIdAndUpdate(
-            userId,
-            { profilePicture: filePath },
-            { new: true }
-        );
-
-        if (!user) {
-            throw new Error('User not found');
-        }
-
-        return user;
-    } catch (error) {
-        console.error('Error updating profile picture in the database:', error);
-        throw error;
-    }
-};
-
 exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
 
@@ -183,19 +151,4 @@ exports.resetPassword = async (req, res) => {
         console.error('Error in resetPassword:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-};
-
-exports.validateToken = (req, res) => {
-    const token = req.headers.authorization;
-
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-        res.status(200).json({ message: 'Token is valid' });
-    });
 };
